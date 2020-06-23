@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  RecordSoundViewController.swift
 //  Pitch Changer
 //
 //  Created by Esraa Gamal on 5/19/20.
@@ -60,6 +60,11 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate{
         }else{
             print("recording failed")
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
         
     }
