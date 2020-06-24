@@ -16,14 +16,12 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate{
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopRecordingbutton: UIButton!
     
-    var audioRecorder : AVAudioRecorder!
+    var audioRecorder: AVAudioRecorder!
     override func viewDidLoad() {
         super.viewDidLoad()
-        audioRecorder.delegate = self
         stopRecordingbutton.isEnabled = false
         stopRecordingbutton.isHidden = true
     }
-
   
     @IBAction func recordPressed(_ sender: UIButton) {
         recordButton.isEnabled = false
@@ -31,17 +29,18 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate{
         stopRecordingbutton.isHidden = false
         label.text = "Recording in Progress"
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
-                let recordingName = "recordedVoice.wav"
-                let pathArray = [dirPath, recordingName]
-                let filePath = URL(string: pathArray.joined(separator: "/"))
+        let recordingName = "recordedVoice.wav"
+        let pathArray = [dirPath, recordingName]
+        let filePath = URL(string: pathArray.joined(separator: "/"))
 
-                let session = AVAudioSession.sharedInstance()
-                try! session.setCategory(AVAudioSession.Category.playAndRecord, mode: AVAudioSession.Mode.default, options: AVAudioSession.CategoryOptions.defaultToSpeaker)
+        let session = AVAudioSession.sharedInstance()
+        try! session.setCategory(AVAudioSession.Category.playAndRecord, mode: AVAudioSession.Mode.default, options: AVAudioSession.CategoryOptions.defaultToSpeaker)
 
-                try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
-                audioRecorder.isMeteringEnabled = true
-                audioRecorder.prepareToRecord()
-                audioRecorder.record()
+        try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
+        audioRecorder.delegate = self
+        audioRecorder.isMeteringEnabled = true
+        audioRecorder.prepareToRecord()
+        audioRecorder.record()
     }
     
     @IBAction func stopPressed(_ sender: UIButton) {
@@ -62,11 +61,15 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate{
         }
     }
     
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-        
+       if segue.identifier == "toEffects" {
+            let soundEffectsVC = segue.destination as! SoundEffectsViewController
+            let recordedAudioURL = sender as! URL
+            soundEffectsVC.recordedAudioURL = recordedAudioURL
+
+        }
+}
     }
     
 
