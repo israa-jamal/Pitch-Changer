@@ -32,15 +32,15 @@ class SoundEffectsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupAudio()
-        // Do any additional setup after loading the view.
     }
     override func viewWillAppear(_ animated: Bool) {
         configureUI(.notPlaying)
     }
     
     @IBAction func playEffect(_ sender: UIButton) {
+        
+        
             switch(ButtonType(rawValue: sender.tag)!) {
             case .slow:
                 playSound(rate: 0.5)
@@ -48,11 +48,11 @@ class SoundEffectsViewController: UIViewController {
                 playSound(rate: 1.5)
             case .lowPitch:
                 playSound(pitch: -1000)
-                case .highPitch:
+            case .highPitch:
                 playSound(pitch: 1000)
             case .reverb:
                 playSound(reverb: true)
-                case .echo:
+            case .echo:
                 playSound(echo: true)
             }
 
@@ -65,11 +65,9 @@ class SoundEffectsViewController: UIViewController {
     }
     
 }
-// MARK: - PlaySoundsViewController: AVAudioPlayerDelegate
+// MARK: - PlaySoundsViewController
 
 extension SoundEffectsViewController: AVAudioPlayerDelegate {
-    
-    // MARK: Alerts
     
     struct Alerts {
         static let DismissAlert = "Dismiss"
@@ -84,8 +82,6 @@ extension SoundEffectsViewController: AVAudioPlayerDelegate {
         static let AudioEngineError = "Audio Engine Error"
     }
     
-    // MARK: PlayingState (raw values correspond to sender tags)
-    
     enum PlayingState { case playing, notPlaying }
     
     // MARK: Audio Functions
@@ -95,7 +91,7 @@ extension SoundEffectsViewController: AVAudioPlayerDelegate {
         do {
             audioFile = try AVAudioFile(forReading: recordedAudioURL as URL)
         } catch {
-            showAlert(Alerts.AudioFileError, message: String(describing: error))
+             showAlert(Alerts.AudioFileError, message: String(describing: error))
         }
     }
     
@@ -163,8 +159,8 @@ extension SoundEffectsViewController: AVAudioPlayerDelegate {
         do {
             try audioEngine.start()
         } catch {
-            showAlert(Alerts.AudioEngineError, message: String(describing: error))
-            return
+             showAlert(Alerts.AudioEngineError, message: String(describing: error))
+                       return
         }
         
         // play the recording!
@@ -189,17 +185,13 @@ extension SoundEffectsViewController: AVAudioPlayerDelegate {
         }
     }
     
-    // MARK: Connect List of Audio Nodes
-    
     func connectAudioNodes(_ nodes: AVAudioNode...) {
         for x in 0..<nodes.count-1 {
             audioEngine.connect(nodes[x], to: nodes[x+1], format: audioFile.processingFormat)
         }
     }
     
-    // MARK: UI Functions
-
-    func configureUI(_ playState: PlayingState) {
+   func configureUI(_ playState: PlayingState) {
         switch(playState) {
         case .playing:
             setPlayButtonsEnabled(false)
@@ -216,7 +208,7 @@ extension SoundEffectsViewController: AVAudioPlayerDelegate {
         fastEffect.isEnabled = enabled
         lowPitchEffect.isEnabled = enabled
         echoEffect.isEnabled = enabled
-        reverbEffect.isEnabled = enabled
+        reverbEffect .isEnabled = enabled
     }
 
     func showAlert(_ title: String, message: String) {
